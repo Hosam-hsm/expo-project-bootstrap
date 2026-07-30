@@ -92,15 +92,13 @@ function ColorsShowcase() {
       {tokenCounts.colorPrimitives > 0 &&
         primitiveGroups.map((group) => (
           <TokenGroupSection key={group} title={`primitive / ${group}`}>
-            {(colorPrimitiveGroups[group] as Array<{ tokenName: string; value: string }>).map(
-              (token) => (
-                <PrimitiveSwatch
-                  key={token.tokenName}
-                  tokenName={token.tokenName}
-                  value={token.value}
-                />
-              ),
-            )}
+            {[...colorPrimitiveGroups[group]].map((token) => (
+              <PrimitiveSwatch
+                key={token.tokenName}
+                tokenName={token.tokenName}
+                value={token.value}
+              />
+            ))}
           </TokenGroupSection>
         ))}
     </ScrollView>
