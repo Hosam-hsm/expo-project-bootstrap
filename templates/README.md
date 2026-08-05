@@ -17,6 +17,8 @@ Adapt **after** `bunx create-expo-app@latest … --template default` and removin
 - Light-only (typical multi-scheme export): lock Uniwind schemes; hide dark/system in Settings.
 - Multi-scheme: Settings scheme toggle; single scheme: no toggle.
 - Stubs may use Uniwind `@variant light` / `dark` for the default scaffold’s appearance demo — Phase B replaces per detection.
+- Stub `colors.ts` exports empty `colorSchemes` + `tokenAppearance.schemes: []` so Phase A typechecks; Storybook theme bar appends schemes from `tokenAppearance` after Phase B (no hardcoded chips).
+- Nav chrome: `isDarkUniwindTheme` (`dark` / `*-night`) — not `theme === "dark"` alone.
 5. Replace demo routes with `src/app/` (default: tabs + intro). Tabs: Expo Router JS `Tabs` + `assets/icons/*.svg`.
 6. **Nav** — toggles per [`navigation/README.md`](./navigation/README.md).
 7. Strip unchecked — [`optional/minimal`](./optional/minimal/README.md). REST → [`optional/rest`](./optional/rest/README.md).

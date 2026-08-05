@@ -54,6 +54,14 @@ Register product schemes as Uniwind `extraThemes`. Emit `@variant light` / `@var
 
 Wire `colorScheme` in `preferences-store` **separately** from `themePreference`. Appearance panel only when `light-and-dark`; color scheme panel only when ≥2 schemes.
 
+**Nav chrome + Storybook (required with schemes):**
+
+| Surface | Requirement |
+|---------|-------------|
+| Expo Router `ThemeProvider` | Use `isDarkUniwindTheme(theme)` from `@/theme/is-dark-uniwind-theme` — `dark` **or** `*-night` → `DarkTheme`. Never `theme === "dark"` alone (product night schemes would keep light nav chrome). |
+| Storybook `with-theme.tsx` | Modes = `["light","dark", ...tokenAppearance.schemes]`. Stub ships empty `schemes`; Phase B fills `tokenAppearance` in `colors.ts` — **do not** hardcode scheme chips. |
+| Colors story hex labels | `resolveColorTokens(theme)` (not `semanticColors[light\|dark]` only) so product schemes show real values. |
+
 ## 1 — Review tokens source
 
 **GitHub URL:** shallow-clone / `gh` the intake URL. **Local JSON:** open the file (and sibling exports in the same folder if present). Inventory export layout (Tokens Studio, Variables JSON, Style Dictionary, etc.). Run the auto-detect table above. Note size/typography breakpoint modes (sm / md / lg+) separately. Skip Phases / feature-flag collections.
@@ -140,9 +148,10 @@ Keep `@/theme` import paths. Prefer CSS-safe names. Match stub file names under 
 | Appearance | From exact `light`/`dark` modes only; else light-only. |
 | Size tokens | `--spacing-*`, `--radius-*`, `--border-width-*` (strokes), padding as spacing keys if needed, `--responsive-*`. |
 | Size modes | Mobile-first: **sm** base; **md** `@media (min-width: 768px)`; **lg+** `1024px` (match `global.css` breakpoints). |
-| Typography | All composite styles for sm/md + lg+. Emit **tokenized** classes only — see **Typography (Uniwind)** below. **Do not** emit scaffold aliases (e.g. `heading-app-section`). Rename app / Storybook `variant` strings to the generated Figma token names (e.g. `heading-rider-tools-section`). |
+| Typography | All composite styles for sm/md + lg+. Emit **tokenized** classes only — see **Typography (Uniwind)** below. **Do not** emit scaffold aliases (e.g. `heading-app-section`) when Figma composites exist — rename app / Storybook `variant` strings to the generated Figma token names. **If the export has faces/weights only (no composite text styles):** retain scaffold `typographyClassNames`, load brand faces via `expoFontSourceMap`, and report the gap in Phase R — do not invent Figma style names. |
 | Primitives | Emit color **and** size primitives. Register typography size / leading / weight faces in `@theme`. |
 | Skip | Feature-flag collections (Phases, etc.). |
+| Stub `colors.ts` | Always export `colorSchemes` (may be `{}`), `tokenAppearance.schemes` (may be `[]`), `appearanceSchemeMap`, and `colorTokens` so Phase A typechecks `use-token-color` / Storybook before Phase B. |
 
 ### Typography (Uniwind) — required shape
 

@@ -6,6 +6,7 @@
 
 export type { ColorTokenName } from "@/theme/tokens/generated/colors";
 export type { TypographyTokenName } from "@/theme/tokens/generated/typography-classes";
+export { isDarkUniwindTheme } from "@/theme/is-dark-uniwind-theme";
 export type { ExpoFontFace } from "@/theme/typography";
 export {
   bgClassName,

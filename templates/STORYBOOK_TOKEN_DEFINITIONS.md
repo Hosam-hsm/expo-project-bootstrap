@@ -154,6 +154,8 @@ Never substitute a different type (e.g. `spacingTokens: { tokenName, value: "16p
 - [ ] File banner: `AUTO-GENERATED — do not edit. Run: bun run tokens:sync`
 - [ ] Keys/counts reflect **this** design system; shapes match stub
 - [ ] `typographyVariants[].name` / `typographyTokenEntries[].key` exist in `typography-classes.ts`
+- [ ] `tokenAppearance.schemes` in generated `colors.ts` lists every product scheme (Storybook theme bar reads this — no hardcoding)
+- [ ] Colors story uses `resolveColorTokens(theme)` for swatch hex (scheme-aware)
 - [ ] Phase C: `bunx tsc --noEmit` passes (stories type-check against exports)
 
 ---

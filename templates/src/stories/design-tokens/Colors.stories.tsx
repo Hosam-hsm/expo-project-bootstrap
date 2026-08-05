@@ -4,6 +4,7 @@ import { ScrollView, View } from "react-native";
 import { useUniwind } from "uniwind";
 
 import { ThemedText } from "@/components/ThemedText";
+import { resolveColorTokens } from "@/hooks/use-token-color";
 import {
   type ColorPrimitiveGroup,
   type ColorTokenGroup,
@@ -17,8 +18,9 @@ import {
 
 function ColorSwatch({ name }: { name: SemanticColorName }) {
   const { theme } = useUniwind();
-  const mode = theme === "dark" ? "dark" : "light";
-  const hex = semanticColors[mode][name];
+  // Prefer active Uniwind palette (appearance or product scheme); fall back to appearance maps.
+  const palette = resolveColorTokens(theme) as Record<string, string>;
+  const hex = palette[name] ?? semanticColors.light[name];
 
   return (
     <View className="mb-sm w-[46%] overflow-hidden rounded-panel border border-stroke-default">
@@ -69,8 +71,7 @@ function ColorsShowcase() {
         <ThemedText variant="heading-app-section">Color Tokens</ThemedText>
         <ThemedText variant="global-body-small" colorToken="text-text-secondary">
           {tokenCounts.colorTokens} semantic tokens · {tokenCounts.colorPrimitives} color primitives
-          · {tokenCounts.figmaTotal} total tokens in code · {theme === "dark" ? "dark" : "light"}{" "}
-          mode
+          · {tokenCounts.figmaTotal} total tokens in code · {theme} theme
         </ThemedText>
       </View>
 

@@ -5,13 +5,17 @@ import { Uniwind, useUniwind } from "uniwind";
 
 import { IconFontLoader } from "@/components/IconFontLoader";
 import { ThemedText } from "@/components/ThemedText";
+import { type ColorSchemeName, tokenAppearance } from "@/theme/tokens/generated/colors";
+
+type ThemeMode = "light" | "dark" | ColorSchemeName;
 
 function ThemeToggleBar() {
   const { theme } = useUniwind();
-  const modes = ["light", "dark"] as const;
+  // Appearance always; product schemes from Phase B `tokenAppearance.schemes` (empty in stub).
+  const modes: ThemeMode[] = ["light", "dark", ...tokenAppearance.schemes];
 
   return (
-    <View className="flex-row gap-xs border-b border-stroke-default bg-surface-secondary px-base py-xs">
+    <View className="flex-row flex-wrap gap-xs border-b border-stroke-default bg-surface-secondary px-base py-xs">
       <ThemedText variant="global-body-small" className="mr-xs">
         Theme:
       </ThemedText>

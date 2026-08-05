@@ -11,6 +11,7 @@ import { IconFontLoader } from "@/components/IconFontLoader";
 import { SplashScreenController } from "@/components/SplashScreenController";
 import { AnalyticsScreenTracker } from "@/services/analytics";
 import { usePreferencesStore } from "@/stores/preferences-store";
+import { isDarkUniwindTheme } from "@/theme/is-dark-uniwind-theme";
 
 /** Minimal root (no i18n / GraphQL / Storybook). Default nav: tabs + intro. */
 export default function RootLayout() {
@@ -21,7 +22,7 @@ export default function RootLayout() {
       <KeyboardProvider>
         <BottomSheetProvider>
           <IconFontLoader>
-            <ThemeProvider value={theme === "dark" ? DarkTheme : DefaultTheme}>
+            <ThemeProvider value={isDarkUniwindTheme(theme) ? DarkTheme : DefaultTheme}>
               <SplashScreenController />
               <AnalyticsScreenTracker />
               <RootNavigator />

@@ -13,6 +13,7 @@ import { SplashScreenController } from "@/components/SplashScreenController";
 import { AppApolloProvider } from "@/providers/apollo-provider";
 import { AnalyticsScreenTracker } from "@/services/analytics";
 import { usePreferencesStore } from "@/stores/preferences-store";
+import { isDarkUniwindTheme } from "@/theme/is-dark-uniwind-theme";
 
 export default function RootLayout() {
   const { theme } = useUniwind();
@@ -23,7 +24,7 @@ export default function RootLayout() {
         <BottomSheetProvider>
           <AppApolloProvider>
             <IconFontLoader>
-              <ThemeProvider value={theme === "dark" ? DarkTheme : DefaultTheme}>
+              <ThemeProvider value={isDarkUniwindTheme(theme) ? DarkTheme : DefaultTheme}>
                 <SplashScreenController />
                 <AnalyticsScreenTracker />
                 <RootNavigator />
