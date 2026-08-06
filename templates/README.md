@@ -23,7 +23,7 @@ Adapt **after** `bunx create-expo-app@latest … --template default` and removin
 6. **Nav** — toggles per [`navigation/README.md`](./navigation/README.md).
 7. Strip unchecked — [`optional/minimal`](./optional/minimal/README.md). REST → [`optional/rest`](./optional/rest/README.md).
 8. **Biome** — after `biome.json`: `bunx biome migrate --write`. Keep `templates/` Biome-clean when editing.
-9. **Uniwind** — `bunx uniwind generate-artifacts --css ./src/global.css --dts ./src/uniwind-types.d.ts`. CSS entry `src/global.css`; `withUniwindConfig` outermost.
+9. **Uniwind** — `bunx uniwind generate-artifacts --css ./src/global.css --dts ./src/uniwind-types.d.ts` (add `--theme <scheme>` per product scheme after Phase B). CSS entry `src/global.css` is **imports only**; breakpoints / `max-width-content` / spacing live in `theme/tokens/generated/spacing.css`. `withUniwindConfig` outermost.
 10. **Argent** — only when any smoke on: `bunx @swmansion/argent init -y`, then `lint:fix`. Skip when both smokes off.
 11. **EAS** — when on: merge `eas.json`, `expo.owner`, `expo-dev-client`, `eas init` (skill Phase A2).
 12. **Tokens Phase B** — when sync on, after A2/A and before C: [`TOKEN_SYNC.md`](./TOKEN_SYNC.md).

@@ -12,7 +12,7 @@ function SpacingShowcase() {
       <View className="gap-xs">
         <ThemedText variant="heading-app-section">Spacing Scale</ThemedText>
         <ThemedText variant="global-body-small" colorToken="text-text-secondary">
-          Size tokens (sm default, md ≥768px, lg+ ≥1024px) from global.css
+          Size tokens from generated spacing.css (Figma Foundations when synced)
         </ThemedText>
       </View>
 

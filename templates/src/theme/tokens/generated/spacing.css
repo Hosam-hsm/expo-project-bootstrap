@@ -1,7 +1,12 @@
 /* AUTO-GENERATED — do not edit. Run: bun run tokens:sync */
-/* Size/spacing tokens — mobile-first (base default, md ≥768px, lg ≥1024px) */
+/* Size/spacing tokens — mobile-first (base default, md / lg+ when size modes exist).
+ *
+ * Layout tokens (--breakpoint-*, --max-width-content) live here in @theme — single
+ * source. Phase B: prefer Figma Foundations values when present; otherwise keep
+ * these scaffold defaults. Do not also define them in global.css.
+ */
 
-/* Uniwind/Tailwind utilities: gap-*, p-*, m-*, rounded-* from these theme keys */
+/* Uniwind/Tailwind utilities: gap-*, p-*, m-*, rounded-*, max-w-content from these theme keys */
 @theme {
   --radius-button: 8px;
   --radius-input: 4px;
@@ -11,10 +16,11 @@
   --spacing-lg: 20px;
   --spacing-sm: 12px;
   --spacing-xs: 8px;
-}
-
-:root {
-  --responsive-max-content-width: 800px;
+  /* Scaffold Uniwind breakpoints (https://docs.uniwind.dev/breakpoints) — override from Figma when present */
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  /* Scaffold app content width for max-w-content — override from Figma when present */
+  --max-width-content: 800px;
 }
 
 @media (min-width: 1024px) {

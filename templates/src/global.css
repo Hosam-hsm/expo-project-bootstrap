@@ -2,20 +2,13 @@
 @import "uniwind";
 
 /*
- * Design system tokens (Uniwind generated/; bun run tokens:sync when enabled)
+ * Design system tokens (Uniwind generated/; bun run tokens:sync when enabled).
+ * Breakpoints, max-width-content, spacing, colors, typography live under
+ * theme/tokens/generated/ — do not redefine them here (avoids conflicting
+ * scaffold vs Figma values). See templates/TOKEN_SYNC.md “Layout tokens”.
  */
 
 @import "./theme/tokens/generated/spacing.css";
 @import "./theme/tokens/generated/primitives.css";
 @import "./theme/tokens/generated/typography-primitives.css";
 @import "./theme/tokens/generated/theme.css";
-
-@theme {
-  /*
-   * Uniwind mobile-first breakpoints (https://docs.uniwind.dev/breakpoints)
-   * sm: 640px (default), md: 768px, lg: 1024px
-   */
-  --breakpoint-md: 768px;
-  --breakpoint-lg: 1024px;
-  --max-width-content: var(--responsive-max-content-width);
-}

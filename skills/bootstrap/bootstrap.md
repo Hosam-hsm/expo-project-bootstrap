@@ -20,7 +20,7 @@
    - **API none:** omit GraphQL; skip REST
 5. **Navigation / permissions** — start `templates/src/app/`; assemble per [navigation/README.md](https://github.com/hosam-hubspire/expo-project-bootstrap/blob/main/templates/navigation/README.md). Permissions → [permissions/README.md](https://github.com/hosam-hubspire/expo-project-bootstrap/blob/main/templates/src/utils/permissions/README.md).
 6. **Biome** — copy `biome.json`, install `@biomejs/biome@latest`, `bunx biome migrate --write`.
-7. **Uniwind** — `src/global.css`; import in root `_layout`; `withUniwindConfig` outermost; `bunx uniwind generate-artifacts --css ./src/global.css --dts ./src/uniwind-types.d.ts`.
+7. **Uniwind** — `src/global.css` (imports only; layout/spacing/color tokens under `theme/tokens/generated/`); import in root `_layout`; `withUniwindConfig` outermost; `bunx uniwind generate-artifacts --css ./src/global.css --dts ./src/uniwind-types.d.ts` (add `--theme <scheme>` when multi-scheme).
 8. **Argent** — only when any smoke on: `bunx @swmansion/argent init -y`, then `bun run lint:fix`. Skip when both smokes off. Before C2 CLI: `argent server status` → if tools 401 or link stale, **non-interactive only**: `argent unlink --yes` then `argent link 'argent://<token>@<host>:<port>' --yes` (or `--host`/`--port`/`--token` with `--yes`). Never run bare `argent unlink` / `argent link` without `-y`/`--yes` (interactive prompts hang agents). Then `argent tools` must not 401.
 9. **Prebuild** — `bunx expo prebuild` when any smoke on; skip when both off.
 10. **Project README** — fill [project-README.md](https://github.com/hosam-hubspire/expo-project-bootstrap/blob/main/templates/project-README.md) (Phase A or before D).

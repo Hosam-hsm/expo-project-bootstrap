@@ -14,6 +14,10 @@
  * Output contracts:
  *   - Uniwind: templates/TOKEN_SYNC.md + stubs under src/theme/tokens/generated/
  *   - Storybook (when src/stories/design-tokens/ exists): templates/STORYBOOK_TOKEN_DEFINITIONS.md
+ *
+ * Layout tokens (--breakpoint-*, --max-width-content): emit in generated spacing.css
+ * @theme only. Prefer Figma Foundations when present; else keep scaffold defaults.
+ * Never redefine them in global.css.
  */
 
 import { execFileSync } from "node:child_process";

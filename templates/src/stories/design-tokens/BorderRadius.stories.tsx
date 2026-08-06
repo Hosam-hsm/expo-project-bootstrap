@@ -12,7 +12,7 @@ function RadiusShowcase() {
       <View className="gap-xs">
         <ThemedText variant="heading-app-section">Border Radius</ThemedText>
         <ThemedText variant="global-body-small" colorToken="text-text-secondary">
-          Radius tokens from global.css
+          Radius tokens from generated spacing.css
         </ThemedText>
       </View>
 
