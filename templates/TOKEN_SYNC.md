@@ -133,7 +133,7 @@ Keep `@/theme` import paths. Prefer CSS-safe names. Match stub file names under 
 | Color values | Accept `#hex` **and** `rgb()` / `rgba()` / `hsl()` / `hsla()`. |
 | Color schemes | Emit **every** retained non-appearance color mode under its own slug. No silent drop; no light/dark rename of product schemes. |
 | Appearance | From exact `light`/`dark` modes only; else light-only. |
-| Size tokens | `--spacing-*`, `--radius-*`, `--border-width-*` (strokes), padding as spacing keys if needed, `--responsive-*`. |
+| Size tokens | Preserve Figma path slugs in CSS names: `space/5` → `--spacing-space-5` → `p-space-5` / `gap-space-5`. Emit one key only—do not also emit a stripped `--spacing-5` alias. Also emit `--radius-*`, `--border-width-*` (strokes), padding as spacing keys if needed, and `--responsive-*`. |
 | Size modes | Mobile-first: **sm** base; **md** `@media (min-width: 768px)`; **lg+** `1024px` (match `global.css` breakpoints). |
 | Typography | All composite styles for sm/md + lg+. Emit **tokenized** classes only — see **Typography (Uniwind)** below. **Do not** emit scaffold aliases (e.g. `heading-app-section`) when Figma composites exist — rename app / Storybook `variant` strings to the generated Figma token names. **If the export has faces/weights only (no composite text styles):** retain scaffold `typographyClassNames`, load brand faces via `expoFontSourceMap`, and report the gap in Phase R — do not invent Figma style names. |
 | Primitives | Emit color **and** size primitives. Register typography size / leading / weight faces in `@theme`. |

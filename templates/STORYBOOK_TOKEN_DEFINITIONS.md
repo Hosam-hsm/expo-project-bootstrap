@@ -41,7 +41,7 @@ Emit **every** export below. Use `as const` on object literals. Derive types fro
 | `semanticColors` | `{ light: Record<tokenName, hex>; dark: Record<tokenName, hex> }` | Swatch labels; see appearance note below |
 | `SemanticColorName` | `keyof typeof semanticColors.light` | |
 | `semanticColorClasses` | `Record<SemanticColorName, string>` | Uniwind bg class per semantic token (`bg-${tokenName}`) |
-| `spacingTokens` | `Record<string, number>` | **Numeric px** — keys like `space-spacing-base` |
+| `spacingTokens` | `Record<string, number>` | **Numeric px** — Figma path slugs such as `space-5` for `space/5` |
 | `radiusTokens` | `Record<string, number>` | **Numeric px** — keys like `radius-panel` |
 | `sizePrimitiveGroups` | `{} as const` (extend when size-primitive stories exist) | Reserved |
 | `SizePrimitiveGroup` | `keyof typeof sizePrimitiveGroups` | |
@@ -122,7 +122,7 @@ Use the **same slug rules** as `colors.ts` / `generated/typography.ts` (path seg
 | `semanticColors.light` / `.dark` | Hex from `theme.css` / pinned appearance sources (`APPEARANCE_SCHEME_MAP`) — Storybook-only; runtime colors stay in CSS |
 | `semanticColorClasses[name]` | `` `bg-${name}` `` |
 | `colorPrimitiveGroups` | Color Primitives collection — group by top-level path segment |
-| `spacingTokens` keys | Size Tokens **sm** spacing leaves → `space-spacing-${slug}` |
+| `spacingTokens` keys | Size Tokens **sm** spacing leaves → the Figma path slug (`space/5` → `space-5`), matching the suffix used by CSS `--spacing-space-5` |
 | `spacingTokens` values | Resolved **number** px (`parseFloat`, no `"px"` suffix) |
 | `radiusTokens` keys | Size Tokens **sm** radius leaves → `radius-${slug}` |
 | `radiusTokens` values | Numeric px |
