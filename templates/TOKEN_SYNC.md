@@ -88,13 +88,13 @@ Match `templates/src/theme/tokens/generated/` **shape intent**; Phase B replaces
 
 | File | Role |
 |------|------|
-| `theme.css` | Semantic `--color-*` under Uniwind variants: appearance `light`/`dark` from exact modes **or** from agent-pinned `APPEARANCE_SCHEME_MAP`; product schemes as `@variant <slug>` |
+| `theme.css` | Semantic `--color-*` under Uniwind variants: appearance `light`/`dark` from exact modes **or** from agent-pinned `APPEARANCE_SCHEME_MAP`; product schemes as `@variant <slug>`. Prefer `var(--primitive-*)` when the Figma value aliases a color primitive |
 | `colors.ts` | Token **names** + scheme/appearance metadata only (`colorTokenNames`, `colorSchemeNames`, `appearanceSchemeMap`, `tokenAppearance`). Values live in `theme.css` — read via `useCSSVariable(\`--color-${token}\`)` |
 | `metro.config.js` | `tokens:sync` patches `extraThemes: […]` under `withUniwindConfig` (no sidecar JSON). **Idempotent:** if the array already matches the detected scheme slugs, leave the file untouched (do not throw). Only throw when `extraThemes` is missing from the config. |
 | `spacing.css` | Size → `@theme` (+ sm / md / lg+ overrides) |
 | `typography-primitives.css` | **`@theme`** typography primitives: `--text-size-*` → `text-size-*`; `--leading-*` → `leading-*` (unitless); `--font-Regular\|Medium\|SemiBold\|Bold` → weight faces (see Typography below) |
 | `typography.ts` | Composite class recipes: `text-size-*` + `leading-*` + `font-Regular\|Medium\|SemiBold\|Bold` (**not** hardcoded `text-[Npx]` / `leading-[Npx]` / `font-normal`) |
-| `primitives.css` | Color + size primitive CSS vars (inventory; semantic UI uses scheme colors + spacing `@theme`) |
+| `primitives.css` | Color + size primitive CSS vars (`--primitive-*`). Semantic `theme.css` tokens reference these via `var(--primitive-*)` when aliased |
 
 **Preferred `colors.ts` shape (multi-scheme):**
 
@@ -129,7 +129,7 @@ Keep `@/theme` import paths. Prefer CSS-safe names. Match stub file names under 
 
 | Area | Requirement |
 |------|-------------|
-| Alias resolution | Resolve before emit. Primitive refs **and** semantic→semantic (include the active scheme’s token tree after primitives). |
+| Alias resolution | Follow aliases before emit. **Primitive** refs → `var(--primitive-*)` in `theme.css` (hex stays in `primitives.css`). Raw colors and unresolved chains stay hex/rgba. Storybook `semanticColors` still gets concrete hex. |
 | Color values | Accept `#hex` **and** `rgb()` / `rgba()` / `hsl()` / `hsla()`. |
 | Color schemes | Emit **every** retained non-appearance color mode under its own slug. No silent drop; no light/dark rename of product schemes. |
 | Appearance | From exact `light`/`dark` modes only; else light-only. |
