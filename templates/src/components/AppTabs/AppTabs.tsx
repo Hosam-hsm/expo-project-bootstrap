@@ -1,22 +1,34 @@
 import { Tabs } from "expo-router";
 import { useTranslation } from "react-i18next";
+import { useCSSVariable } from "uniwind";
 
 import { Icon } from "@/components/Icon";
-import { useColorTokens } from "@/hooks/use-token-color";
+import type { ColorTokenName } from "@/theme";
+
+const tabColorTokens = [
+  "text-text-default",
+  "text-text-secondary",
+  "surface-default",
+  "stroke-default",
+] as const satisfies readonly ColorTokenName[];
+
+const tabColorVars = tabColorTokens.map((token) => `--color-${token}`);
 
 export default function AppTabs() {
   const { t } = useTranslation();
-  const colors = useColorTokens();
+  const [textDefault, textSecondary, surfaceDefault, strokeDefault] = useCSSVariable(
+    tabColorVars,
+  ) as [string, string, string, string];
 
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors["text-text-default"],
-        tabBarInactiveTintColor: colors["text-text-secondary"],
+        tabBarActiveTintColor: textDefault,
+        tabBarInactiveTintColor: textSecondary,
         tabBarStyle: {
-          backgroundColor: colors["surface-default"],
-          borderTopColor: colors["stroke-default"],
+          backgroundColor: surfaceDefault,
+          borderTopColor: strokeDefault,
         },
       }}
     >

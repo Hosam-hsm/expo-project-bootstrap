@@ -17,7 +17,7 @@ Adapt **after** `bunx create-expo-app@latest … --template default` and removin
 - Light-only (typical multi-scheme export): lock Uniwind schemes; hide dark/system in Settings.
 - Multi-scheme: Settings scheme toggle; single scheme: no toggle.
 - Stubs may use Uniwind `@variant light` / `dark` for the default scaffold’s appearance demo — Phase B replaces per detection.
-- Stub `colors.ts` exports empty `colorSchemes` + `tokenAppearance.schemes: []` so Phase A typechecks; Storybook theme bar appends schemes from `tokenAppearance` after Phase B (no hardcoded chips).
+- Stub `colors.ts` exports empty `colorSchemeNames` + `tokenAppearance.schemes: []` so Phase A typechecks; Storybook theme bar appends schemes from `tokenAppearance` after Phase B (no hardcoded chips).
 - Nav chrome: `isDarkUniwindTheme` (`dark` / `*-night`) — not `theme === "dark"` alone.
 5. Replace demo routes with `src/app/` (default: tabs + intro). Tabs: Expo Router JS `Tabs` + `assets/icons/*.svg`.
 6. **Nav** — toggles per [`navigation/README.md`](./navigation/README.md).
@@ -137,7 +137,7 @@ GraphQL: `EXPO_PUBLIC_GRAPHQL_URL=https://rickandmortyapi.com/graphql`
 REST: `EXPO_PUBLIC_API_URL=https://jsonplaceholder.typicode.com`  
 Subscriptions: `EXPO_PUBLIC_GRAPHQL_SUBSCRIPTIONS_ENABLED=true` (+ optional `EXPO_PUBLIC_GRAPHQL_WS_URL`).
 
-After Phase B fonts: wire `expoFontSourceMap` in `src/theme/typography.ts` (`Regular` / `Medium` / `Bold`), install packages or add `.ttf`s, load via `useFonts` in `IconFontLoader`. Sync emits matching `--font-*` in `typography-primitives.css`. Typography classes use `font-Regular` etc. — not `font-normal` / `font-bold`.
+After Phase B fonts: wire `expoFontSourceMap` in `src/theme/typography.ts` (`Regular` / `Medium` / `SemiBold` / `Bold`), install packages or add `.ttf`s, load via `useFonts` in `IconFontLoader`. Sync emits matching `--font-*` in `typography-primitives.css`. Typography classes use `font-Regular` etc. — not `font-normal` / `font-bold`.
 
 ## Scripts
 

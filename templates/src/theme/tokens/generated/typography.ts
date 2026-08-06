@@ -1,7 +1,8 @@
 /* AUTO-GENERATED — do not edit. Run: bun run tokens:sync */
 /**
- * Stub: tokenized typography — text-size-* + leading-* + font-Regular|Medium|Bold.
- * Phase B replaces with Figma keys; never emit hardcoded text-[Npx] / font-normal.
+ * Generated typography class recipes (source: scaffold).
+ * Helpers / expoFontSourceMap / merge: src/theme/typography.ts
+ * Scale CSS: typography-primitives.css
  */
 
 export const typographyClassNames = {

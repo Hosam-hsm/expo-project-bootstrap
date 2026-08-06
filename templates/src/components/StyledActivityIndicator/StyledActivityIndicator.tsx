@@ -1,6 +1,6 @@
 import { ActivityIndicator, type ActivityIndicatorProps } from "react-native";
+import { useCSSVariable } from "uniwind";
 
-import { useTokenColor } from "@/hooks/use-token-color";
 import type { ColorTokenName } from "@/theme";
 
 type StyledActivityIndicatorProps = ActivityIndicatorProps & {
@@ -12,7 +12,7 @@ export function StyledActivityIndicator({
   colorToken = "text-text-default",
   ...props
 }: StyledActivityIndicatorProps) {
-  const tokenColor = useTokenColor(colorToken);
+  const tokenColor = useCSSVariable(`--color-${colorToken}`) as string;
 
   return <ActivityIndicator {...props} color={color ?? tokenColor} />;
 }

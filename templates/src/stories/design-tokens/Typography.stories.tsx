@@ -11,7 +11,7 @@ function TypographyShowcase() {
       <View className="gap-xs">
         <ThemedText variant="heading-app-section">Font Families</ThemedText>
         <ThemedText variant="global-body-small" colorToken="text-text-secondary">
-          Distinct families from Figma typography export (token-definitions / typography-primitives)
+          Distinct families from Figma typography export (token-definitions)
         </ThemedText>
       </View>
 

@@ -1,19 +1,19 @@
 import { extendTailwindMerge } from "tailwind-merge";
 
 import type { ColorTokenName } from "@/theme/tokens/generated/colors";
-import type { TypographyTokenName } from "@/theme/tokens/generated/typography-classes";
-import { typographyClassNames } from "@/theme/tokens/generated/typography-classes";
 import {
-  typographyFontFaces,
-  typographyFontSizes,
-  typographyLineHeights,
-} from "@/theme/tokens/generated/typography-primitives";
+  type TypographyTokenName,
+  typographyClassNames,
+} from "@/theme/tokens/generated/typography";
+
+export type { TypographyTokenName };
+export { typographyClassNames };
 
 /**
  * Custom font files for `expo-font` / `useFonts` (root `IconFontLoader` + Storybook).
  *
- * Keys **Regular**, **Medium**, and **Bold** must match Uniwind `@theme` `--font-*`
- * utilities (`font-Regular`, …) in `typography-primitives.css`. In React Native,
+ * Keys **Regular**, **Medium**, **SemiBold**, and **Bold** must match Uniwind `@theme`
+ * `--font-*` utilities (`font-Regular`, …) in `typography-primitives.css`. In React Native,
  * weight must be a separate loaded face — `font-normal` / `font-bold` do not switch
  * custom fonts.
  *
@@ -24,33 +24,29 @@ import {
 export const expoFontSourceMap = {
   // Regular: require("../../assets/fonts/Brand-Regular.ttf"),
   // Medium: require("../../assets/fonts/Brand-Medium.ttf"),
+  // SemiBold: require("../../assets/fonts/Brand-SemiBold.ttf"),
   // Bold: require("../../assets/fonts/Brand-Bold.ttf"),
 } as const;
 
 export type ExpoFontFace = keyof typeof expoFontSourceMap;
 
 /**
- * Merges typography + ad hoc classNames so custom `text-size-*`, `leading-*`, and
- * `font-Regular|Medium|Bold` replace earlier conflicting utilities.
+ * Recognises this design system's utilities as conflict groups, matched by shape so
+ * any generated scale key works without mirroring the CSS scales in TS:
+ * `text-size-*` (size), `leading-*` (line height), `font-Capitalised` (RN weight face,
+ * distinct from Tailwind's lowercase `font-bold` weights).
  */
 export const typographyTwMerge = extendTailwindMerge({
+  override: {
+    // Unlike Tailwind's `text-lg`, `text-size-*` carries no implicit line height,
+    // so a size override must not drop the recipe's `leading-*`.
+    conflictingClassGroups: { "font-size": [] },
+  },
   extend: {
     classGroups: {
-      "font-size": [
-        {
-          text: Object.keys(typographyFontSizes),
-        },
-      ],
-      leading: [
-        {
-          leading: Object.keys(typographyLineHeights),
-        },
-      ],
-      "font-family": [
-        {
-          font: Object.keys(typographyFontFaces),
-        },
-      ],
+      "font-size": [{ text: [{ size: [() => true] }] }],
+      leading: [{ leading: [(value: string) => /^[A-Za-z][\w-]*$/.test(value)] }],
+      "font-family": [{ font: [(value: string) => /^[A-Z]/.test(value)] }],
     },
   },
 });
@@ -87,10 +83,6 @@ export function typographyClassName(
 
 export function colorClassName(colorToken: ColorTokenName): string {
   return `text-${colorToken}`;
-}
-
-export function bgClassName(colorToken: ColorTokenName): string {
-  return `bg-${colorToken}`;
 }
 
 /** Prefer this over string-join when composing ThemedText / variant + overrides. */

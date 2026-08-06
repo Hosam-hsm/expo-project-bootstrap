@@ -2,7 +2,7 @@
 /* Stub typography primitives as Uniwind/Tailwind @theme tokens
  * --text-size-*  → text-size-*
  * --leading-*    → leading-*
- * --font-Regular|Medium|Bold → RN weight faces (load via expoFontSourceMap in typography.ts)
+ * --font-Regular|Medium|SemiBold|Bold → RN weight faces (load via expoFontSourceMap)
  */
 
 @theme {
@@ -20,5 +20,6 @@
   --leading-xl: 1.4;
   --font-Regular: "System";
   --font-Medium: "System";
+  --font-SemiBold: "System";
   --font-Bold: "System";
 }

@@ -70,7 +70,7 @@ Emit **every** export below. Use `as const` on object literals. Derive types fro
 ```ts
 {
   path: string;        // human path with slashes, e.g. "global/body/base"
-  key: string;         // slug — must match typography-classes.ts key / TypographyTokenName
+  key: string;         // slug — must match generated/typography.ts key / TypographyTokenName
   family: string;      // resolved family label
   size: number;        // lg+ px (number, not string)
   weight: string;      // CSS weight string: "400" | "500" | "700"
@@ -83,7 +83,7 @@ Emit **every** export below. Use `as const` on object literals. Derive types fro
 
 ```ts
 {
-  name: string;        // typography-classes key
+  name: string;        // generated/typography.ts key
   label: string;       // display label (spaces, lower case)
   size: number;        // lg+ px
   sizeSmMd: number;
@@ -113,13 +113,13 @@ Emit **every** export below. Use `as const` on object literals. Derive types fro
 
 ## Mapping from generated runtime tokens
 
-Use the **same slug rules** as `colors.ts` / `typography-classes.ts` (path segments → kebab-case, `/` → `-`).
+Use the **same slug rules** as `colors.ts` / `generated/typography.ts` (path segments → kebab-case, `/` → `-`).
 
 | Export field | Source |
 |--------------|--------|
-| `colorTokenGroups[*][].tokenName` | Keys of `colorSchemes[defaultScheme]` |
+| `colorTokenGroups[*][].tokenName` | Entries in `colorTokenNames` (grouped by first path segment) |
 | `colorTokenGroups` group key | First segment of token path (`text`, `surface`, `button`, …) |
-| `semanticColors.light` / `.dark` | `colorSchemes[APPEARANCE_SCHEME_MAP.light]` and `.dark` |
+| `semanticColors.light` / `.dark` | Hex from `theme.css` / pinned appearance sources (`APPEARANCE_SCHEME_MAP`) — Storybook-only; runtime colors stay in CSS |
 | `semanticColorClasses[name]` | `` `bg-${name}` `` |
 | `colorPrimitiveGroups` | Color Primitives collection — group by top-level path segment |
 | `spacingTokens` keys | Size Tokens **sm** spacing leaves → `space-spacing-${slug}` |
@@ -153,9 +153,9 @@ Never substitute a different type (e.g. `spacingTokens: { tokenName, value: "16p
 - [ ] `transformAndWrite` writes `src/stories/design-tokens/token-definitions.ts` with **all** exports above
 - [ ] File banner: `AUTO-GENERATED — do not edit. Run: bun run tokens:sync`
 - [ ] Keys/counts reflect **this** design system; shapes match stub
-- [ ] `typographyVariants[].name` / `typographyTokenEntries[].key` exist in `typography-classes.ts`
+- [ ] `typographyVariants[].name` / `typographyTokenEntries[].key` exist in `generated/typography.ts`
 - [ ] `tokenAppearance.schemes` in generated `colors.ts` lists every product scheme (Storybook theme bar reads this — no hardcoding)
-- [ ] Colors story uses `resolveColorTokens(theme)` for swatch hex (scheme-aware)
+- [ ] Colors story reads swatch hex via `useCSSVariable(\`--color-${name}\`)`
 - [ ] Phase C: `bunx tsc --noEmit` passes (stories type-check against exports)
 
 ---

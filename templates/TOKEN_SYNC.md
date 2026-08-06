@@ -39,11 +39,11 @@ Derive wiring:
 | Both appearance **and** non-appearance modes | `light-and-dark` + schemes | Non-appearance → schemes; light/dark → appearance | Both panels |
 | Single color mode total | `light-only` (unless that mode is literally `dark`) | One scheme; no scheme toggle | Minimal |
 
-**Default scheme / `colorTokens.light`·`dark`:** Pin `APPEARANCE_SCHEME_MAP` in `scripts/sync-design-tokens.mjs` (agent — never interactive in the script).
+**Default scheme / appearance pin:** Pin `APPEARANCE_SCHEME_MAP` in `scripts/sync-design-tokens.mjs` (agent — never interactive in the script).
 
 | Situation | Agent action |
 |-----------|----------------|
-| Exact Figma `light`/`dark` appearance modes | Use those for `@variant light`/`dark` and `colorTokens`; no ask |
+| Exact Figma `light`/`dark` appearance modes | Use those for `@variant light`/`dark` in `theme.css`; no ask |
 | Named scheme `Default` / `default` | Pin `APPEARANCE_SCHEME_MAP = { light: "default", dark: "default" }` without asking (dark mirrored for future OS dark) |
 | Product schemes only, **no** named Default | **Ask the user** which scheme slug maps to light and which to dark, then pin those constants. Dark may equal light until a dark-oriented scheme exists |
 | Ambiguous mode names (`Day`/`Night`, …) | Ask only then (existing rule) |
@@ -60,7 +60,7 @@ Wire `colorScheme` in `preferences-store` **separately** from `themePreference`.
 |---------|-------------|
 | Expo Router `ThemeProvider` | Use `isDarkUniwindTheme(theme)` from `@/theme/is-dark-uniwind-theme` — `dark` **or** `*-night` → `DarkTheme`. Never `theme === "dark"` alone (product night schemes would keep light nav chrome). |
 | Storybook `with-theme.tsx` | Modes = `["light","dark", ...tokenAppearance.schemes]`. Stub ships empty `schemes`; Phase B fills `tokenAppearance` in `colors.ts` — **do not** hardcode scheme chips. |
-| Colors story hex labels | `resolveColorTokens(theme)` (not `semanticColors[light\|dark]` only) so product schemes show real values. |
+| Colors story hex labels | `useCSSVariable(\`--color-${name}\`)` (fall back to `semanticColors.light` when empty). |
 
 ## 1 — Review tokens source
 
@@ -89,35 +89,22 @@ Match `templates/src/theme/tokens/generated/` **shape intent**; Phase B replaces
 | File | Role |
 |------|------|
 | `theme.css` | Semantic `--color-*` under Uniwind variants: appearance `light`/`dark` from exact modes **or** from agent-pinned `APPEARANCE_SCHEME_MAP`; product schemes as `@variant <slug>` |
-| `colors.ts` | `colorSchemes` (scheme-keyed) + first-class `colorTokens.light`/`dark` (pinned scheme sources); keep `ColorTokenName` as the semantic token key union |
+| `colors.ts` | Token **names** + scheme/appearance metadata only (`colorTokenNames`, `colorSchemeNames`, `appearanceSchemeMap`, `tokenAppearance`). Values live in `theme.css` — read via `useCSSVariable(\`--color-${token}\`)` |
 | `metro.config.js` | `tokens:sync` patches `extraThemes: […]` under `withUniwindConfig` (no sidecar JSON). **Idempotent:** if the array already matches the detected scheme slugs, leave the file untouched (do not throw). Only throw when `extraThemes` is missing from the config. |
 | `spacing.css` | Size → `@theme` (+ sm / md / lg+ overrides) |
-| `typography-primitives.css` | **`@theme`** typography primitives: `--text-size-*` → `text-size-*`; `--leading-*` → `leading-*` (unitless); `--font-Regular\|Medium\|Bold` → weight faces (see Typography below) |
-| `typography-primitives.ts` | TS mirrors of size / leading / font-face maps for Storybook + `tailwind-merge` |
-| `typography-classes.ts` | Composite class strings: `text-size-*` + `leading-*` + `font-Regular\|Medium\|Bold` (**not** hardcoded `text-[Npx]` / `leading-[Npx]` / `font-normal`) |
+| `typography-primitives.css` | **`@theme`** typography primitives: `--text-size-*` → `text-size-*`; `--leading-*` → `leading-*` (unitless); `--font-Regular\|Medium\|SemiBold\|Bold` → weight faces (see Typography below) |
+| `typography.ts` | Composite class recipes: `text-size-*` + `leading-*` + `font-Regular\|Medium\|SemiBold\|Bold` (**not** hardcoded `text-[Npx]` / `leading-[Npx]` / `font-normal`) |
 | `primitives.css` | Color + size primitive CSS vars (inventory; semantic UI uses scheme colors + spacing `@theme`) |
 
 **Preferred `colors.ts` shape (multi-scheme):**
 
 ```ts
-export const colorSchemes = {
-  default: { /* semantic token → CSS color */ },
-  "rider-tools": { /* … */ },
-} as const;
+export const colorTokenNames = [/* semantic token slugs */] as const;
+export type ColorTokenName = (typeof colorTokenNames)[number];
 
-export type ColorSchemeName = keyof typeof colorSchemes;
+export const colorSchemeNames = ["default", "rider-tools"] as const;
+export type ColorSchemeName = (typeof colorSchemeNames)[number];
 export const defaultColorScheme = "default" satisfies ColorSchemeName;
-
-export type ColorTokenName = keyof (typeof colorSchemes)[typeof defaultColorScheme];
-
-export function colorsForScheme(scheme: ColorSchemeName) {
-  return colorSchemes[scheme];
-}
-
-export const colorTokens = {
-  light: colorSchemes.default,
-  dark: colorSchemes.default,
-} as const;
 
 export const appearanceSchemeMap = { light: "default", dark: "default", source: "named-default" } as const;
 
@@ -134,7 +121,7 @@ export const tokenAppearance: {
 
 Switch schemes with `Uniwind.setTheme(schemeSlug)` — **not** `setTheme("dark")` unless detection classified that mode as appearance-dark.
 
-**Single scheme:** one object (or `colorSchemes` with one key); no scheme toggle UI.
+**Single scheme:** one entry in `colorSchemeNames`; no scheme toggle UI.
 
 Keep `@/theme` import paths. Prefer CSS-safe names. Match stub file names under `generated/`.
 
@@ -151,14 +138,14 @@ Keep `@/theme` import paths. Prefer CSS-safe names. Match stub file names under 
 | Typography | All composite styles for sm/md + lg+. Emit **tokenized** classes only — see **Typography (Uniwind)** below. **Do not** emit scaffold aliases (e.g. `heading-app-section`) when Figma composites exist — rename app / Storybook `variant` strings to the generated Figma token names. **If the export has faces/weights only (no composite text styles):** retain scaffold `typographyClassNames`, load brand faces via `expoFontSourceMap`, and report the gap in Phase R — do not invent Figma style names. |
 | Primitives | Emit color **and** size primitives. Register typography size / leading / weight faces in `@theme`. |
 | Skip | Feature-flag collections (Phases, etc.). |
-| Stub `colors.ts` | Always export `colorSchemes` (may be `{}`), `tokenAppearance.schemes` (may be `[]`), `appearanceSchemeMap`, and `colorTokens` so Phase A typechecks `use-token-color` / Storybook before Phase B. |
+| Stub `colors.ts` | Always export `colorTokenNames`, `tokenAppearance.schemes` (may be `[]`), and `appearanceSchemeMap` so Phase A typechecks before Phase B. |
 
 ### Typography (Uniwind) — required shape
 
 Compose from declared primitives (same idea as a Tailwind `theme.extend` + `getTextVariantTailwindClassName` map). **Do not** bake pixel sizes or line-heights into class strings.
 
 ```ts
-// typography-classes.ts — good
+// generated/typography.ts — good
 "global-body-base": "text-size-400 leading-md font-Regular lg:text-size-450",
 "global-body-small-bold": "text-size-350 leading-md font-Medium lg:text-size-400",
 
@@ -177,18 +164,20 @@ Compose from declared primitives (same idea as a Tailwind `theme.extend` + `getT
 | Figma weight | Uniwind class | App load + CSS |
 |--------------|---------------|----------------|
 | Regular (and thin/light fallbacks) | `font-Regular` | `expoFontSourceMap.Regular` + `--font-Regular` in `typography-primitives.css` |
-| Medium | `font-Medium` | `…Medium` |
-| Bold | `font-Bold` | `…Bold` |
+| Medium (500) | `font-Medium` | `…Medium` |
+| SemiBold (600) | `font-SemiBold` | `…SemiBold` |
+| Bold (700+) | `font-Bold` | `…Bold` |
 
 - Emit **one** face class per style (`font-Bold`), never `font-bold` + `font-sans`.
+- Map weight **600** / `"semibold"` → `SemiBold` (check semibold **before** bold in string matching — `"semibold".includes("bold")` is true).
 - `IconFontLoader` / root loader: `useFonts({ ...expoFontSourceMap })`.
 - `--font-*` values must equal the **native names** expo-font registers (usually the map keys when custom files are loaded).
-- Phase B: install/load the brand `.ttf`s (or Google font packages) and keep keys `Regular` / `Medium` / `Bold` stable when swapping files.
-- **Mono / second family:** only add extra faces (e.g. `MonoRegular`) when the design system needs a separate loaded mono stack. Do not invent mono faces by default — map monospaced composites to the same Regular/Medium/Bold faces unless intake fonts include a dedicated mono.
+- Phase B: install/load the brand `.ttf`s (or Google font packages) and keep keys `Regular` / `Medium` / `SemiBold` / `Bold` stable when swapping files.
+- **Mono / second family:** only add extra faces (e.g. `MonoRegular`) when the design system needs a separate loaded mono stack. Do not invent mono faces by default — map monospaced composites to the same Regular/Medium/SemiBold/Bold faces unless intake fonts include a dedicated mono.
 
-Keep `expoFontSourceMap` in `src/theme/typography.ts` as the hand-maintained **load map**. Sync emits `--font-*` / `typographyFontFaces` in `typography-primitives.*` — do not maintain a separate `fonts.ts` or empty `font-families.css` import.
+Keep `expoFontSourceMap` in `src/theme/typography.ts` as the hand-maintained **load map**. Sync emits `--font-*` in `typography-primitives.css` and class recipes in `generated/typography.ts` — do not maintain a separate `fonts.ts` or empty `font-families.css` import. Delete stale `typography-primitives.ts` / `typography-classes.ts` if present.
 
-**Class overrides:** `ThemedText` (and any variant + `className` composition) must use `tailwind-merge` via `mergeTypographyClassName` / `typographyTwMerge` in `src/theme/typography.ts`, with `extendTailwindMerge` class groups for custom `text-size-*`, `leading-*`, and `font-Regular|Medium|Bold` (keys from generated `typography-primitives`). Do not string-join conflicting utilities — later overrides would not win reliably.
+**Class overrides:** `ThemedText` (and any variant + `className` composition) must use `tailwind-merge` via `mergeTypographyClassName` / `typographyTwMerge` in `src/theme/typography.ts`. Match utilities by shape (`text-size-*`, `leading-*`, capitalised `font-*` faces) and clear the default `font-size` → `leading` conflict (`override.conflictingClassGroups`) so a size override does not drop the recipe’s line height. Do not string-join conflicting utilities — later overrides would not win reliably.
 
 **Line height gate:** Generated recipes include `leading-*`, but applying leading is optional per instance. `ThemedText` exposes `withLineHeight` (default `true`). Pass `withLineHeight={false}` (or `typographyClassName(variant, { withLineHeight: false })`) to omit leading utilities — do not fork variants just to drop line height.
 
@@ -216,7 +205,7 @@ Summary:
 | `colorTokenGroups`, `semanticColors`, `semanticColorClasses` | Grouped semantic colors + light/dark maps |
 | `colorPrimitiveGroups` | Grouped `{ tokenName, value }[]` or `{}` |
 | `fontFamilies` | `Record<string, string>` (not an array) |
-| `typographyVariants`, `typographyTokenEntries` | Arrays; `name`/`key` match `typography-classes.ts` |
+| `typographyVariants`, `typographyTokenEntries` | Arrays; `name`/`key` match `generated/typography.ts` |
 | `tokenCounts` | Coverage summary for Colors story header |
 
 **Gate:** `bunx tsc --noEmit` with Storybook stories included. Wrong shape = Phase B incomplete.

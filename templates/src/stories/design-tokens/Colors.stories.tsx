@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-native";
 import type { ReactNode } from "react";
 import { ScrollView, View } from "react-native";
-import { useUniwind } from "uniwind";
+import { useCSSVariable, useUniwind } from "uniwind";
 
 import { ThemedText } from "@/components/ThemedText";
-import { resolveColorTokens } from "@/hooks/use-token-color";
 import {
   type ColorPrimitiveGroup,
   type ColorTokenGroup,
@@ -17,10 +16,9 @@ import {
 } from "@/stories/design-tokens/token-definitions";
 
 function ColorSwatch({ name }: { name: SemanticColorName }) {
-  const { theme } = useUniwind();
-  // Prefer active Uniwind palette (appearance or product scheme); fall back to appearance maps.
-  const palette = resolveColorTokens(theme) as Record<string, string>;
-  const hex = palette[name] ?? semanticColors.light[name];
+  const cssValue = useCSSVariable(`--color-${name}`);
+  const hex =
+    typeof cssValue === "string" && cssValue.length > 0 ? cssValue : semanticColors.light[name];
 
   return (
     <View className="mb-sm w-[46%] overflow-hidden rounded-panel border border-stroke-default">

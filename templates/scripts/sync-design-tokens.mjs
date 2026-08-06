@@ -159,9 +159,11 @@ function resolveTokensSource() {
  * a JSON file — check `path.dirname(sourcePath)` when needed.
  *
  * Must produce the same file set / shapes as template stubs in src/theme/tokens/generated/
- * (theme.css, colors.ts, spacing.css, typography-primitives.*, typography-classes.ts, …).
- * Typography: text-size-* + leading-* + font-Regular|Medium|Bold — see templates/TOKEN_SYNC.md
- * “Typography (Uniwind)”. Call patchMetroExtraThemes(schemeSlugs) when multi-scheme.
+ * (theme.css, colors.ts names+metadata, spacing.css, typography-primitives.css,
+ * typography.ts recipes, …). Delete stale typography-primitives.ts / typography-classes.ts
+ * if present. Typography: text-size-* + leading-* + font-Regular|Medium|SemiBold|Bold —
+ * see templates/TOKEN_SYNC.md “Typography (Uniwind)”. Call patchMetroExtraThemes(schemeSlugs)
+ * when multi-scheme.
  *
  * When Storybook is on, also write src/stories/design-tokens/token-definitions.ts per
  * templates/STORYBOOK_TOKEN_DEFINITIONS.md (export API — stories import fixed shapes;

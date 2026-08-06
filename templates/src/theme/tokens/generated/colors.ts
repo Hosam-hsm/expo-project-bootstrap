@@ -1,46 +1,29 @@
 /* AUTO-GENERATED — do not edit. Run: bun run tokens:sync */
 /**
- * Stub semantic colors keyed by Uniwind *appearance* (light/dark) for the default scaffold.
- * After Phase B (TOKEN_SYNC.md), prefer scheme-keyed maps (`colorSchemes.default`, …) for
- * Figma modes such as Default / Rider Tools — do not treat those modes as appearance dark.
+ * Semantic color *names* + appearance/scheme metadata.
+ * Resolved values live in theme.css (`--color-*` per Uniwind variant).
+ * Read them in JS via `useCSSVariable(`--color-${token}`)`.
  *
- * `colorSchemes` + `tokenAppearance` ship empty in the stub so `use-token-color` and the
- * Storybook theme bar typecheck in Phase A. Phase B replaces this file.
+ * `colorSchemeNames` + `tokenAppearance.schemes` ship empty in the stub so Phase A
+ * typechecks. Phase B replaces this file.
  */
 
-const stubLight = {
-  "text-text-default": "#333333",
-  "text-text-secondary": "#666666",
-  "text-text-link": "#183563",
-  "surface-default": "#ffffff",
-  "surface-secondary": "#f8f3ed",
-  "surface-tertiary": "#f0f2f5",
-  "button-button-primary": "#183563",
-  "stroke-default": "#6782ad",
-} as const;
+export const colorTokenNames = [
+  "text-text-default",
+  "text-text-secondary",
+  "text-text-link",
+  "surface-default",
+  "surface-secondary",
+  "surface-tertiary",
+  "button-button-primary",
+  "stroke-default",
+] as const;
 
-const stubDark = {
-  "text-text-default": "#ffffff",
-  "text-text-secondary": "#d9d9d9",
-  "text-text-link": "#96dbf8",
-  "surface-default": "#12284b",
-  "surface-secondary": "#16305a",
-  "surface-tertiary": "#2d4a73",
-  "button-button-primary": "#96dbf8",
-  "stroke-default": "#6782ad",
-} as const;
+export type ColorTokenName = (typeof colorTokenNames)[number];
 
-/** Product schemes — empty until Phase B. Appearance uses `colorTokens`. */
-export const colorSchemes = {} as const;
+export const colorSchemeNames = [] as const;
 
-export type ColorSchemeName = keyof typeof colorSchemes;
-
-export const colorTokens = {
-  light: stubLight,
-  dark: stubDark,
-} as const;
-
-export type ColorTokenName = keyof typeof colorTokens.light;
+export type ColorSchemeName = (typeof colorSchemeNames)[number];
 
 export const appearanceSchemeMap = {
   light: "light",
