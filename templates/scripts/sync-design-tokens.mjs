@@ -15,9 +15,12 @@
  *   - Uniwind: templates/TOKEN_SYNC.md + stubs under src/theme/tokens/generated/
  *   - Storybook (when src/stories/design-tokens/ exists): templates/STORYBOOK_TOKEN_DEFINITIONS.md
  *
- * Layout tokens (--breakpoint-*, --max-width-content): emit in generated spacing.css
- * @theme only. Prefer Figma Foundations when present; else keep scaffold defaults.
- * Never redefine them in global.css.
+ * Layout tokens (--breakpoint-*, --max-width-*): emit in generated spacing.css
+ * @theme only — never in global.css.
+ * Breakpoints: design-system when present, else scaffold md/lg.
+ * Max-width: emit only tokens present in the source (container / max-width / etc.
+ * as --max-width-{slug}). Do not invent scaffold-only keys (e.g. --max-width-content)
+ * during Phase B when the design system has no match — remap or drop app max-w-content.
  */
 
 import { execFileSync } from "node:child_process";

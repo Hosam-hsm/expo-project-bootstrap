@@ -1,12 +1,14 @@
 /* AUTO-GENERATED — do not edit. Run: bun run tokens:sync */
 /* Size/spacing tokens — mobile-first (base default, md / lg+ when size modes exist).
  *
- * Layout tokens (--breakpoint-*, --max-width-content) live here in @theme — single
- * source. Phase B: prefer Figma Foundations values when present; otherwise keep
- * these scaffold defaults. Do not also define them in global.css.
+ * Layout tokens live here in @theme — single source; never also in global.css.
+ * Phase A stub: scaffold breakpoints + max-width-content for demo screens.
+ * Phase B: prefer design-system breakpoint / container / max-width tokens;
+ *   do not invent scaffold-only max-width keys when the source has none.
+ *   See templates/TOKEN_SYNC.md “Layout tokens”.
  */
 
-/* Uniwind/Tailwind utilities: gap-*, p-*, m-*, rounded-*, max-w-content from these theme keys */
+/* Uniwind/Tailwind utilities: gap-*, p-*, m-*, rounded-*, max-w-* from these theme keys */
 @theme {
   --radius-button: 8px;
   --radius-input: 4px;
@@ -16,10 +18,11 @@
   --spacing-lg: 20px;
   --spacing-sm: 12px;
   --spacing-xs: 8px;
-  /* Scaffold Uniwind breakpoints (https://docs.uniwind.dev/breakpoints) — override from Figma when present */
+  /* Scaffold Uniwind breakpoints — Phase B replaces from design system when present */
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
-  /* Scaffold app content width for max-w-content — override from Figma when present */
+  /* Scaffold-only for Phase A demos (max-w-content). Phase B: emit only DS max-width /
+   * container tokens as --max-width-{slug}; drop this key if the source has no match. */
   --max-width-content: 800px;
 }
 
